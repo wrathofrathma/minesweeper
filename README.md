@@ -5,3 +5,7 @@ I saw someone post on reddit their minesweeper clone, but whenenever they clicke
 The only resource I used outside of tailwindcss & vue was a bomb icon I found on OpenGameArt.org (default favicon.ico kinda dry)
 
 Bomb icon: https://opengameart.org/content/16-bit-animated-bomb
+
+Link to the live project.
+
+https://minesweepa-8a52a.web.app/

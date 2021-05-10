@@ -39,13 +39,16 @@
     </div>
     <div class="flex flex-col items-center">
       <div class="bg-gray-400 p-1 rounded-md" @contextmenu="$event.preventDefault()">
-        <div v-for="row in height" class="flex flex-row">
+        <div v-for="row in height" class="flex flex-row w-full">
           <cell
             v-for="col in width"
             :row="row - 1"
             :col="col - 1"
             :state="board[row - 1][col - 1]"
             :value="truth ? truth[row - 1][col - 1] : NaN"
+            :viewport="viewport"
+            :width="width"
+            :height="height"
             @click="onClick"
             @flag="onFlag"
           ></cell>
@@ -65,11 +68,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from "vue";
-import { floor, values } from 'lodash';
+import { ref, watch, onUnmounted } from "vue";
+import { floor } from 'lodash';
 import Cell from "@/components/Cell.vue"
 import lodash from 'lodash'
 
+// GAME RELATED FLAGS & DATA
 const playing = ref(false);
 const difficulty = ref(1); // 0 = easy, 1 = medium, 2 = expert
 const totalBombs = ref(40);
@@ -81,6 +85,19 @@ const height = ref(16);
 const width = ref(16);
 const gameOver = ref(false);
 const win = ref(false);
+const viewport = ref({width: 0, height: 0});
+
+const handleResize = () => {
+  viewport.value.width = window.innerWidth;
+  viewport.value.height = window.innerHeight;
+}
+
+window.addEventListener('resize', handleResize);
+handleResize();
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+})
 
 function matrix(m: number, n: number): Array<Array<number>> {
   return Array.from({
@@ -94,18 +111,20 @@ watch(() => difficulty.value, (diff) => {
     totalBombs.value = 10;
     height.value = 9;
     width.value = 9;
-    // board.value = matrix(height.value, width.value);
   } else if (diff === 1) {
     totalBombs.value = 40;
     height.value = 16;
     width.value = 16;
-    // board.value = matrix(height.value, width.value);
   } else {
     // diff === 2
     totalBombs.value = 99
-    height.value = 16;
-    width.value = 30;
-    // board.value = matrix(height.value, width.value);
+    if (viewport.value.height > viewport.value.width) {
+      width.value = 16;
+      height.value = 30;
+    } else {
+      height.value = 16;
+      width.value = 30;
+    }
   }
   playAgain();
 })
