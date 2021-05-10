@@ -2,7 +2,7 @@
     <button 
     @click="$emit('click', {row, col})" 
     @contextmenu="emitFlag"
-    class="lg:p-2 p-1 m-0.5 rounded-sm focus:outline-none font-bold text-xs lg:text-md"
+    class="lg:p-2 p-1 m-0.5 rounded-sm focus:outline-none font-bold text-xs lg:text-md xl:text-lg"
     :class="classes"
     :style="style"
     >
